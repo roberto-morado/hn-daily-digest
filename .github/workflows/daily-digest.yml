@@ -1,0 +1,33 @@
+name: Daily Hacker News digest
+
+# Runs every day at 12:00 UTC (7:00 AM EST / 8:00 AM EDT).
+# To change the hour, edit the cron line below.
+on:
+  schedule:
+    - cron: "0 12 * * *"
+  workflow_dispatch: # lets you run it by hand from the Actions tab
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Fetch stories and send the digest
+        env:
+          # These values come from the repository's own secrets, which
+          # the repository owner enters under Settings -> Secrets and
+          # variables -> Actions. Nothing is stored in the code.
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          MAIL_FROM: ${{ secrets.MAIL_FROM }}
+          MAIL_TO: ${{ secrets.MAIL_TO }}
+          DIGEST_COUNT: "15"
+          DIGEST_MIN_SCORE: "50"
+        run: deno run --allow-net --allow-env --allow-read hn_digest.ts
