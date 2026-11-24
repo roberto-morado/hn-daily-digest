@@ -1,0 +1,1 @@
+{"tasks":{"dry-run":"deno run --allow-net --allow-env --allow-read hn_digest.ts --dry-run","run":"deno run --allow-net --allow-env --allow-read hn_digest.ts","setup":"deno run --allow-env --allow-read --allow-write hn_digest.ts --setup"}}
